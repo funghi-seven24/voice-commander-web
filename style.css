@@ -1,0 +1,773 @@
+/* Voice Commander - CSS Styles */
+
+/* リセット & ベーススタイル */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* エンジン設定スタイル */
+.engine-settings {
+    background: rgba(0, 50, 100, 0.3);
+    border: 1px solid #00aaff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.engine-settings h4 {
+    color: #00ffff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.engine-selection {
+    margin-bottom: 15px;
+}
+
+.engine-selection label {
+    display: block;
+    color: #cccccc;
+    margin-bottom: 5px;
+}
+
+.engine-selection select,
+.whisper-model-selection select {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    color: #00ff00;
+    border: 1px solid #00ff00;
+    border-radius: 5px;
+    padding: 8px;
+    font-family: inherit;
+}
+
+.engine-status {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.engine-status .status-item {
+    text-align: center;
+    flex: 1;
+}
+
+.engine-status .status-label {
+    display: block;
+    color: #cccccc;
+    font-size: 0.9em;
+    margin-bottom: 3px;
+}
+
+.engine-status .status-value {
+    color: #00ffff;
+    font-weight: bold;
+}
+
+.whisper-model-selection {
+    margin-bottom: 15px;
+}
+
+.whisper-model-selection label {
+    display: block;
+    color: #cccccc;
+    margin-bottom: 5px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00ff00;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00ff00, #00ffff);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.progress-label {
+    color: #ffff00;
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.progress-status {
+    color: #00ffff;
+    text-align: center;
+    font-size: 0.9em;
+}
+
+body {
+    font-family: 'Courier New', 'Monaco', 'Menlo', monospace;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #0f1419 100%);
+    color: #00ff00;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* 動的背景効果 */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* メインコンテナ */
+#game-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ヘッダー */
+#game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #00ff00;
+    padding-bottom: 20px;
+}
+
+#game-header h1 {
+    font-size: 2.5rem;
+    text-shadow: 
+        0 0 10px #00ff00,
+        0 0 20px #00ff00,
+        0 0 30px #00ff00;
+    margin-bottom: 10px;
+    animation: glow 2s ease-in-out infinite alternate;
+}
+
+.tagline {
+    font-size: 1.1rem;
+    color: #00ffff;
+    opacity: 0.8;
+    font-weight: normal;
+}
+
+@keyframes glow {
+    from { text-shadow: 0 0 10px #00ff00; }
+    to { text-shadow: 0 0 20px #00ff00, 0 0 30px #00ff00; }
+}
+
+/* ステータスパネル */
+#status-panel {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+}
+
+.status-group {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.status-item {
+    text-align: center;
+    flex: 1;
+}
+
+.status-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #00ffff;
+    margin-bottom: 5px;
+}
+
+.status-value {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffff00;
+    text-shadow: 0 0 5px currentColor;
+}
+
+.status-unit {
+    font-size: 1.2rem;
+    color: #00ff00;
+    margin-left: 5px;
+}
+
+.wave-info {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 1px solid #00ff00;
+    font-size: 1.1rem;
+}
+
+.enemy-count {
+    color: #ff4444;
+}
+
+/* 音声ログパネル */
+#voice-log {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    flex-grow: 1;
+    min-height: 250px;
+}
+
+#voice-log h3 {
+    color: #00ffff;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+}
+
+#log-content {
+    height: 200px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.log-entry {
+    padding: 8px 12px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    animation: slideIn 0.3s ease-out;
+}
+
+.log-entry.system {
+    background: rgba(0, 255, 255, 0.1);
+    border-left: 4px solid #00ffff;
+    color: #00ffff;
+}
+
+.log-entry.commander {
+    background: rgba(255, 255, 0, 0.1);
+    border-left: 4px solid #ffff00;
+    color: #ffff00;
+}
+
+.log-entry.player {
+    background: rgba(0, 255, 0, 0.1);
+    border-left: 4px solid #00ff00;
+    color: #00ff00;
+    text-align: right;
+}
+
+.log-entry.alert {
+    background: rgba(255, 68, 68, 0.1);
+    border-left: 4px solid #ff4444;
+    color: #ff4444;
+    font-weight: bold;
+}
+
+@keyframes slideIn {
+    from { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+}
+
+/* スクロールバースタイル */
+#log-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+#log-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+}
+
+#log-content::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}
+
+#log-content::-webkit-scrollbar-thumb:hover {
+    background: #00ffff;
+}
+
+/* コントロールパネル */
+#control-panel {
+    margin-bottom: 20px;
+}
+
+.main-button {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #00ff00 0%, #00aa00 100%);
+    color: #000;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+    margin-bottom: 20px;
+}
+
+.main-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 255, 0, 0.5);
+}
+
+.main-button:active {
+    transform: translateY(0);
+}
+
+.main-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* マイクテストボタン */
+.test-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    background: linear-gradient(135deg, #00ffff 0%, #0088aa 100%);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 255, 255, 0.3);
+    margin-bottom: 15px;
+}
+
+.test-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+}
+
+.test-button:active {
+    transform: translateY(0);
+}
+
+.test-button.testing {
+    background: linear-gradient(135deg, #ffaa00 0%, #ff6600 100%);
+    animation: pulse 1s infinite;
+}
+
+/* マイクテスト結果 */
+#mic-test-result {
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid #00ffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#mic-status-display {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: #00ffff;
+}
+
+/* 音量メーター */
+#volume-meter {
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid #00ff00;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+#volume-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #00ff00 0%, #ffff00 50%, #ff4444 100%);
+    transition: width 0.1s ease;
+    border-radius: 10px;
+}
+
+#test-instructions {
+    color: #ffff00;
+    font-size: 0.95rem;
+    margin-top: 10px;
+}
+
+/* テスト状態別スタイル */
+.test-success {
+    border-color: #00ff00 !important;
+}
+
+.test-success #mic-status-display {
+    color: #00ff00;
+}
+
+.test-error {
+    border-color: #ff4444 !important;
+}
+
+.test-error #mic-status-display {
+    color: #ff4444;
+}
+
+/* マイク許可ガイド */
+.permission-guide {
+    background: rgba(255, 165, 0, 0.1);
+    border: 2px solid #ffaa00;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.permission-guide h4 {
+    color: #ffaa00;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+.guide-content p {
+    color: #ffff00;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.guide-content ol {
+    color: #fff;
+    margin: 10px 0;
+    padding-left: 25px;
+}
+
+.guide-content ol li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.small-btn {
+    background: #ffaa00;
+    color: #000;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.small-btn:hover {
+    background: #ff8800;
+    transform: translateY(-1px);
+}
+
+.permission-guide.hidden {
+    display: none !important;
+}
+
+/* 音声コントロール */
+#voice-controls {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #00ff00;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.voice-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+#mic-indicator {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.status-off {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+}
+
+.status-on {
+    background: rgba(0, 255, 0, 0.2);
+    color: #00ff00;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.command-help h4 {
+    color: #00ffff;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.command-details {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.command-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 80px;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(0, 255, 255, 0.05);
+    border-radius: 5px;
+    border-left: 3px solid #00ffff;
+    font-size: 0.85rem;
+    align-items: center;
+}
+
+.command-name {
+    color: #00ffff;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.command-desc {
+    color: #fff;
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
+
+.command-timing {
+    color: #ffff00;
+    font-size: 0.75rem;
+    text-align: center;
+    background: rgba(255, 255, 0, 0.1);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* ゲーム状況表示 */
+#situation-display {
+    background: rgba(0, 100, 0, 0.3);
+    border: 2px solid #00ff00;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+}
+
+.situation-header {
+    font-size: 1.1rem;
+    color: #00ff00;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.situation-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#enemy-threat {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.threat-low {
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.1);
+}
+
+.threat-medium {
+    color: #ffaa00;
+    background: rgba(255, 170, 0, 0.1);
+}
+
+.threat-high {
+    color: #ff4444;
+    background: rgba(255, 68, 68, 0.1);
+}
+
+.threat-critical {
+    color: #ff0000;
+    background: rgba(255, 0, 0, 0.2);
+    animation: pulse 1s infinite;
+}
+
+#recommended-action {
+    color: #ffff00;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px #ffff00;
+}
+
+#last-command-effect {
+    color: #00ffff;
+    font-size: 0.9rem;
+    min-height: 20px;
+    font-style: italic;
+}
+
+/* ゲームコントロール */
+#game-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    flex: 1;
+    padding: 12px;
+    background: rgba(0, 255, 255, 0.1);
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+.control-btn:hover {
+    background: rgba(0, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* フッター */
+#game-footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: 20px;
+    border-top: 1px solid #00ff00;
+    opacity: 0.7;
+}
+
+#game-footer p {
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.version {
+    font-size: 0.8rem !important;
+    color: #00ffff;
+}
+
+/* ユーティリティクラス */
+.hidden {
+    display: none !important;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.highlight {
+    color: #ffff00 !important;
+    text-shadow: 0 0 5px #ffff00;
+}
+
+.danger {
+    color: #ff4444 !important;
+    text-shadow: 0 0 5px #ff4444;
+}
+
+/* レスポンシブデザイン */
+@media (max-width: 768px) {
+    #game-container {
+        padding: 15px;
+    }
+    
+    #game-header h1 {
+        font-size: 2rem;
+    }
+    
+    .status-group {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .status-value {
+        font-size: 1.5rem;
+    }
+    
+    .main-button {
+        font-size: 1.2rem;
+        padding: 15px;
+    }
+    
+    .command-list {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .tagline {
+        font-size: 0.9rem;
+    }
+    
+    #log-content {
+        height: 150px;
+    }
+    
+    .log-entry {
+        font-size: 0.85rem;
+    }
+}
+
+/* 特殊効果 */
+.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.flash {
+    animation: flash 0.3s ease-in-out;
+}
+
+@keyframes flash {
+    0% { background: rgba(255, 255, 255, 0.1); }
+    50% { background: rgba(255, 255, 255, 0.3); }
+    100% { background: rgba(255, 255, 255, 0.1); }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Voice Commander - 宇宙防衛司令部</title>
+    <meta name="description" content="世界初の完全音声指示ゲーム - あなたの声だけで地球を守れ！">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- ヘッダー -->
+        <header id="game-header">
+            <h1>🚀 宇宙防衛司令部</h1>
+            <p class="tagline">Voice Commander: Space Defense HQ</p>
+        </header>
+
+        <!-- ゲーム状態パネル -->
+        <div id="status-panel">
+            <div class="status-group">
+                <div class="status-item">
+                    <span class="status-label">地球防衛度</span>
+                    <span class="status-value" id="defense">100</span>
+                    <span class="status-unit">%</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">艦隊戦力</span>
+                    <span class="status-value" id="fleet-count">3</span>
+                    <span class="status-unit">/3</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">撃破数</span>
+                    <span class="status-value" id="kill-count">0</span>
+                    <span class="status-unit">体</span>
+                </div>
+            </div>
+            <div class="wave-info">
+                <span>第<span id="wave-number">1</span>波</span>
+                <span class="enemy-count">敵: <span id="enemy-count">0</span>体</span>
+            </div>
+        </div>
+
+        <!-- ゲーム状況表示 -->
+        <div id="situation-display" class="hidden">
+            <div class="situation-header">📡 戦況分析</div>
+            <div class="situation-content">
+                <div id="enemy-threat" class="threat-low">脅威レベル: 低</div>
+                <div id="recommended-action">推奨行動: 待機</div>
+                <div id="last-command-effect"></div>
+            </div>
+        </div>
+
+        <!-- 音声ログパネル -->
+        <div id="voice-log">
+            <h3>🎙️ 通信ログ</h3>
+            <div id="log-content">
+                <div class="log-entry system">
+                    [システム] 音声認識待機中...
+                </div>
+            </div>
+        </div>
+
+        <!-- コントロールパネル -->
+        <div id="control-panel">
+            <!-- マイク設定ガイド -->
+            <div id="mic-permission-guide" class="permission-guide">
+                <h4>📍 マイク設定ガイド</h4>
+                <div class="guide-content">
+                    <p><strong>Edge での設定方法:</strong></p>
+                    <ol>
+                        <li>アドレスバーの 🔒 アイコンをクリック</li>
+                        <li>「マイク」を「許可」に設定</li>
+                        <li>「完了」をクリック</li>
+                        <li>ページをリロード</li>
+                    </ol>
+                    <button id="hide-guide-btn" class="small-btn">理解した</button>
+                </div>
+            </div>
+
+            <!-- マイクテストボタン -->
+            <button id="mic-test-btn" class="test-button">
+                🎤 マイクテスト
+            </button>
+            
+            <!-- マイクテスト結果 -->
+            <div id="mic-test-result" class="hidden">
+                <div id="mic-status-display"></div>
+                <div id="volume-meter">
+                    <div id="volume-bar"></div>
+                </div>
+                <div id="test-instructions">
+                    「テスト」と言ってみてください
+                </div>
+            </div>
+            
+            <!-- 音声認識エンジン設定 -->
+            <div id="voice-engine-settings" class="engine-settings">
+                <h4>🎙️ 音声認識エンジン設定</h4>
+                <div class="engine-selection">
+                    <label for="engine-select">エンジン選択:</label>
+                    <select id="engine-select">
+                        <option value="webspeech">Web Speech API（軽量・高速）</option>
+                        <option value="whisper">Whisper WASM（テスト中・モック実装）</option>
+                    </select>
+                </div>
+                
+                <div id="engine-status" class="engine-status">
+                    <div class="status-item">
+                        <span class="status-label">現在のエンジン</span>
+                        <span class="status-value" id="current-engine">Web Speech API</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">初期化状態</span>
+                        <span class="status-value" id="engine-init-status">未初期化</span>
+                    </div>
+                </div>
+                
+                <!-- Whisper専用設定 -->
+                <div id="whisper-settings" class="hidden">
+                    <div class="whisper-model-selection">
+                        <label for="model-select">モデル選択:</label>
+                        <select id="model-select">
+                            <option value="tiny">Tiny (39MB) - 最高速度</option>
+                            <option value="base">Base (142MB) - バランス型</option>
+                            <option value="small">Small (244MB) - 高精度</option>
+                            <option value="medium">Medium (769MB) - 最高精度</option>
+                        </select>
+                    </div>
+                    
+                    <div id="model-download-progress" class="hidden">
+                        <div class="progress-label">モデル初期化中...</div>
+                        <div class="progress-bar">
+                            <div id="download-progress-fill" class="progress-fill"></div>
+                        </div>
+                        <div id="download-status" class="progress-status">0%</div>
+                    </div>
+                </div>
+                
+                <button id="apply-engine-btn" class="control-btn">設定適用</button>
+            </div>
+            
+            <button id="start-btn" class="main-button">
+                🎮 防衛戦開始
+            </button>
+            
+            <div id="voice-controls" class="hidden">
+                <div class="voice-status">
+                    <span id="mic-status">🎤 音声認識: </span>
+                    <span id="mic-indicator" class="status-off">OFF</span>
+                </div>
+                
+                <div class="command-help">
+                    <h4>音声コマンド</h4>
+                    <div class="command-details">
+                        <div class="command-item">
+                            <span class="command-name">「攻撃」</span>
+                            <span class="command-desc">敵1-2体撃破 / 反撃リスク有</span>
+                            <span class="command-timing">敵接近時</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">「防御」</span>
+                            <span class="command-desc">防衛度+5-15 / 安全</span>
+                            <span class="command-timing">防衛度低下時</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">「撤退」</span>
+                            <span class="command-desc">艦隊-1 / 防衛度大回復</span>
+                            <span class="command-timing">緊急時</span>
+                        </div>
+                        <div class="command-item">
+                            <span class="command-name">「状況」</span>
+                            <span class="command-desc">現状報告</span>
+                            <span class="command-timing">いつでも</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="game-controls" class="hidden">
+                <button id="pause-btn" class="control-btn">⏸️ 一時停止</button>
+                <button id="restart-btn" class="control-btn">🔄 再開始</button>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <footer id="game-footer">
+            <p>🎧 ヘッドフォン推奨 | 🌍 地球の運命はあなたの声にかかっている</p>
+            <p class="version">Voice Commander v1.0 - Web Prototype</p>
+        </footer>
+    </div>
+
+    <!-- オーディオ要素（効果音用） -->
+    <audio id="audio-context" preload="none"></audio>
+
+    <!-- JavaScript読み込み -->
+    <!-- 基礎システム -->
+    <script src="voice.js"></script>
+    <script src="audio.js"></script>
+    <script src="game.js"></script>
+    <script src="mic-test.js"></script>
+    
+    <!-- Whisper WebAssembly システム -->
+    <script src="voice-recognition-engine.js"></script>
+    <script src="webspeech-engine.js"></script>
+    <script src="audio-processor.js"></script>
+    <script src="model-manager.js"></script>
+    <script src="whisper-wasm-engine.js"></script>
+    
+    <!-- 高度機能 -->
+    <script src="advanced-voice.js"></script>
+    <script src="confirmation-system.js"></script>
+    <script src="voice-recognition-unified.js"></script>
+    
+    <!-- メインアプリケーション -->
+    <script src="main.js"></script>
+</body>
+</html>
